@@ -26,6 +26,18 @@ public class CreateUserObject {
     private Integer id;
     private String createdAt;
 
+    public static List<CreateUserObject> getObjectsFromJson(String filePath) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonContent = new String(Files.readAllBytes(Paths.get(filePath)));
+            return objectMapper.readValue(jsonContent, new TypeReference<List<CreateUserObject>>() {
+            });
+        } catch (IOException e) {
+            log.info(e.getStackTrace());
+            return null;
+        }
+    }
+
     public static CreateUserObject getObjectFromJson(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {

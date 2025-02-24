@@ -6,7 +6,7 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    public static CreateUserObject postNewUser(CreateUserObject object) {
+    public static CreateUserObject postNewUserWithResponse(CreateUserObject object) {
 
         String body = given()
                 .body(object)
@@ -17,6 +17,12 @@ public class CreateUserSteps {
                 .jsonPath().get();
 
         return CreateUserObject.getObjectFromJson(body);
+    }
+
+    public static void postNewUser(CreateUserObject object) {
+        given()
+                .body(object)
+                .post();
     }
 
 
