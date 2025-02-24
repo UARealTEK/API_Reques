@@ -1,10 +1,9 @@
 package base;
 
+import base.utils.Endpoints;
 import io.restassured.response.Response;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 
@@ -14,11 +13,11 @@ public class CreateUserSteps {
 
         return given()
                 .body(object)
-                .post()
+                .post(Endpoints.getEndpoint(Endpoints.USERS))
                 .then()
                 .extract()
                 .body()
-                .jsonPath().getObject(new String(Files.readAllBytes(Paths.get(Constants.JSON_FILE_PATH))), CreateUserObject.class);
+                .jsonPath().getObject("", CreateUserObject.class);
     }
 
     public static void postNewUser(CreateUserObject object) {

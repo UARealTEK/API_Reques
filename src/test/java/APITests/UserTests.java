@@ -33,6 +33,7 @@ public class UserTests {
         }
 
         object = objects.get(random.nextInt(objects.size()));
+        log.info(String.format("object contains the following data: %s", object));
 
         if (object == null) {
             throw new IllegalStateException("No users found in the JSON file!");
@@ -45,6 +46,8 @@ public class UserTests {
         CreateUserObject actualObject = object;
         LocalDate currentTime = LocalDate.now();
         CreateUserSteps.postNewUser(object);
+
+
         log.info(CreateUserSteps.postNewUserWithResponse(object));
         assertTrue(currentTime.isEqual(LocalDate.parse(actualObject.getCreatedAt(), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))));
     }
