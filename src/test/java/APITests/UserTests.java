@@ -3,15 +3,22 @@ package APITests;
 import base.Constants;
 import base.CreateUserObject;
 import base.CreateUserSteps;
+import base.utils.Threshold;
 import io.restassured.RestAssured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
@@ -25,6 +32,11 @@ public class UserTests {
 
     @BeforeEach
     void setUp() {
+        RestAssured.baseURI = Constants.BASE_URL;
+    }
+
+    @RepeatedTest(3)
+    public void checkPostUser() throws IOException {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         List<CreateUserObject> objects = CreateUserObject.getObjectsFromJson(Constants.JSON_FILE_PATH);
 
@@ -32,23 +44,14 @@ public class UserTests {
             throw new IllegalStateException("Unable to locate objects in JSON file!");
         }
 
-        object = objects.get(random.nextInt(objects.size()));
-        log.info(String.format("object contains the following data: %s", object));
+        object = CreateUserSteps.postNewUserWithResponse(objects.get(random.nextInt(objects.size())));
 
-        if (object == null) {
-            throw new IllegalStateException("No users found in the JSON file!");
-        }
-        RestAssured.baseURI = Constants.BASE_URL;
-    }
+        ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
+        ZonedDateTime createdTime = ZonedDateTime.parse(object.getCreatedAt(), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT).withZone(ZoneOffset.UTC)).truncatedTo(ChronoUnit.SECONDS);
 
-    @Test
-    public void checkPostUser() throws IOException {
-        CreateUserObject actualObject = object;
-        LocalDate currentTime = LocalDate.now();
-        CreateUserSteps.postNewUser(object);
+        log.info(createdTime.toEpochSecond());
+        log.info(currentTime.toEpochSecond());
 
-
-        log.info(CreateUserSteps.postNewUserWithResponse(object));
-        assertTrue(currentTime.isEqual(LocalDate.parse(actualObject.getCreatedAt(), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))));
+        assertTrue(Threshold.isEqual(createdTime.toEpochSecond(),currentTime.toEpochSecond()));
     }
 }

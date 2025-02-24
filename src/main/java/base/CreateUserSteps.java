@@ -23,7 +23,7 @@ public class CreateUserSteps {
     public static void postNewUser(CreateUserObject object) {
         given()
                 .body(object)
-                .post();
+                .post(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
 
