@@ -1,19 +1,22 @@
 package base;
 
+import io.restassured.response.Response;
+
 import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    public void postNewUser(CreateUserObject object) {
-        given()
-                .body(object)
-                .post();
-    }
+    public static CreateUserObject postNewUser(CreateUserObject object) {
 
-    public void postNewUserWithResponse(CreateUserObject object) {
-        given()
+        String body = given()
                 .body(object)
-                .post();
+                .post()
+                .then()
+                .extract()
+                .body()
+                .jsonPath().get();
+
+        return CreateUserObject.getObjectFromJson(body);
     }
 
 

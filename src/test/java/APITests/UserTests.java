@@ -3,38 +3,34 @@ package APITests;
 import base.Constants;
 import base.CreateUserObject;
 import base.CreateUserSteps;
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserTests {
 
-    private static CreateUserObject object; // user Method for deserealiztion here
+    private CreateUserObject object;
 
-    @Test
-    public void checkPostUser(CreateUserObject object) {
-        CreateUserObject actualObject;
-        CreateUserSteps steps = new CreateUserSteps();
-        steps.postNewUserWithResponse(object);
-        LocalDate currentTime = LocalDate.now();
-
-
-
-
-        currentTime.compareTo(LocalDate.parse(actualObject.getCreatedAt(), Constants.DATE_FORMAT));
-
+    @BeforeEach
+    void setUp() {
+        object = CreateUserSteps.postNewUser(object);
+        if (object == null) {
+            throw new IllegalStateException("No users found in the JSON file!");
+        }
+        RestAssured.baseURI = Constants.BASE_URL;
     }
 
-    /**
-     * TODO:
-     * - create method which will parse JSON to CreateUserObject Object (deserialize JSON)
-     *
-     * Steps for Tests:
-     * 1. Create UserSteps Object (deserialize JSON to Object)
-     * 2. execute method using the received data (post....)
-     * 3. Receive the response and .extract().body()....getObject() - > to receive new CreateUserObject()
-     * 4. Compare tje received Body (after executing POST request) with the object which was passed into the test
-     * 5.
-     *
-     */
+    @Test
+    public void checkPostUser() {
+        CreateUserObject actualObject = CreateUserSteps.postNewUser(object);
+
+        LocalDate currentTime = LocalDate.now();
+        assertTrue(currentTime.isEqual(LocalDate.parse(actualObject.getCreatedAt(), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))));
+    }
 }
