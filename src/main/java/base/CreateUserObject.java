@@ -48,10 +48,10 @@ public class CreateUserObject {
             return null;
         }
     }
-
-    public String getJsonFromObject() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
-    }
+//
+//    public String getJsonFromObject() throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        return objectMapper.writeValueAsString(this);
+//    }
 
 }

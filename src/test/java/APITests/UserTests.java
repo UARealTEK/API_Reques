@@ -4,9 +4,12 @@ import base.Constants;
 import base.CreateUserObject;
 import base.CreateUserSteps;
 import io.restassured.RestAssured;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserTests {
 
+    private static final Log log = LogFactory.getLog(UserTests.class);
     private CreateUserObject object;
 
     @BeforeEach
@@ -37,9 +41,11 @@ public class UserTests {
     }
 
     @Test
-    public void checkPostUser() {
+    public void checkPostUser() throws IOException {
         CreateUserObject actualObject = object;
         LocalDate currentTime = LocalDate.now();
+        CreateUserSteps.postNewUser(object);
+        log.info(CreateUserSteps.postNewUserWithResponse(object));
         assertTrue(currentTime.isEqual(LocalDate.parse(actualObject.getCreatedAt(), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT))));
     }
 }
