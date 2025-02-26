@@ -1,19 +1,16 @@
 package APITests;
 
 import base.Constants;
-import base.CreateUserObject;
 import base.CreateUserSteps;
 import base.utils.Threshold;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
-import io.restassured.specification.Argument;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,21 +41,22 @@ public class UserTests {
 
     @ParameterizedTest()
     @MethodSource("userArguments")
-    public void checkPostUser(String name, String job) throws IOException {
+    public void checkPostUser(String name, String job) {
         JSONObject object = new JSONObject().put("name", name).put("job",job);
-        JSONObject response = CreateUserSteps.postNewUserWithResponse(object);
-
+        Response response = CreateUserSteps.postNewUserWithResponse(object);
+        JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
 
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC)
                 .truncatedTo(ChronoUnit.SECONDS);
-        ZonedDateTime createdTime = ZonedDateTime.parse(response.getString("createdAt"), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)
+        ZonedDateTime createdTime = ZonedDateTime.parse(receivedObjectBody.getString("createdAt"), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)
                 .withZone(ZoneOffset.UTC))
                 .truncatedTo(ChronoUnit.SECONDS);
 
         log.info(currentTime + " / " + createdTime);
 
         assertTrue(Threshold.isEqual(createdTime.toEpochSecond(),currentTime.toEpochSecond()));
-
+        log.info(response.then().extract().statusCode());
+        log.info(CreateUserSteps.getUser(new JSONObject(response.then().extract().body().asString()).getString("id")).then().extract().statusCode());
     }
 
     public static Stream<Arguments> userArguments() throws IOException {
