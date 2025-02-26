@@ -10,7 +10,7 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    public static JSONObject postNewUserWithResponse(JSONObject object) throws IOException {
+    public static JSONObject postNewUserWithResponse(JSONObject object) {
 
         String response = given()
                 .body(object)
@@ -19,7 +19,6 @@ public class CreateUserSteps {
                 .extract()
                 .body()
                 .asString();
-        Constants.writeNewObjectToJSON(object);
         return new JSONObject(response);
     }
 

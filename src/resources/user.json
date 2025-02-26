@@ -4,12 +4,28 @@
     "job": "Leader"
   },
   {
-    "name": "morpheus",
-    "job": "Leader"
+    "name": "neo",
+    "job": "The One"
   },
   {
-    "name": "morpheus",
-    "job": "Leader"
+    "name": "trinity",
+    "job": "Operator"
+  },
+  {
+    "name": "agent smith",
+    "job": "Agent"
+  },
+  {
+    "name": "cypher",
+    "job": "Traitor"
+  },
+  {
+    "name": "tank",
+    "job": "Operator"
+  },
+  {
+    "name": "apoc",
+    "job": "Soldier"
   },
   {
     "name": "morpheus",
