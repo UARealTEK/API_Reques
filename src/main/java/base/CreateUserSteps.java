@@ -19,6 +19,7 @@ public class CreateUserSteps {
                 .extract()
                 .body()
                 .asString();
+        Constants.writeNewObjectToJSON(object);
         return new JSONObject(response);
     }
 

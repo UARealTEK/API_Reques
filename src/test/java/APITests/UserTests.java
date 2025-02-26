@@ -8,10 +8,11 @@ import io.restassured.RestAssured;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.io.IOException;
 
@@ -20,10 +21,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Execution(ExecutionMode.CONCURRENT)
 public class UserTests {
 
     private static final Log log = LogFactory.getLog(UserTests.class);
@@ -46,9 +46,7 @@ public class UserTests {
                 .withZone(ZoneOffset.UTC))
                 .truncatedTo(ChronoUnit.SECONDS);
 
-        log.info(createdTime.toEpochSecond());
-        log.info(currentTime.toEpochSecond());
-
         assertTrue(Threshold.isEqual(createdTime.toEpochSecond(),currentTime.toEpochSecond()));
+
     }
 }
