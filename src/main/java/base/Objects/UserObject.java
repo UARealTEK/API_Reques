@@ -10,7 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserObject {
+    String id;
     String name;
     String job;
+    String createdAt;
+    String first_name;
+    String last_name;
+    String email;
+    String avatar;
+
 
 }
