@@ -3,7 +3,8 @@ package APITests;
 import base.Common.Checks;
 import base.Constants;
 import base.CreateUserSteps;
-import base.Objects.UserObject;
+import base.Objects.BaseUserObject;
+import base.Objects.ExtendedUserObject;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
@@ -21,8 +22,6 @@ import static base.Utils.ParserHelper.getJsonAsObjectUsingGson;
 @Execution(ExecutionMode.CONCURRENT)
 public class UserTests {
 
-    private static final Log log = LogFactory.getLog(UserTests.class);
-
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = Constants.BASE_URL;
@@ -30,7 +29,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkPostUserRequest() {
-        List<UserObject> userDataList = getJsonAsObjectUsingGson(UserObject[].class);
+        List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(BaseUserObject[].class);
         return  userDataList.stream().map(
                 instance ->
                 DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getName(), instance.getJob()), () ->
@@ -39,7 +38,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkGetUserRequest() {
-        List<UserObject> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getFirst_name(), instance.getLast_name()), () ->
                         checkSpecificUser(instance))
@@ -52,14 +51,13 @@ public class UserTests {
         Assertions.assertTrue(Checks.isGetRequestValid(response));
     }
 
-    public void checkSpecificUser(UserObject user) {
+    public void checkSpecificUser(ExtendedUserObject user) {
         Response response = CreateUserSteps.getUser(user);
         Assertions.assertTrue(Checks.isGetRequestValid(response));
     }
 
-    public void checkPostUser(UserObject user) {
+    public void checkPostUser(BaseUserObject user) {
         Response response = CreateUserSteps.postNewUserWithResponse(user);
-        log.info(response.then().log().all());
         Assertions.assertTrue(Checks.isUserCreated(response));
         Assertions.assertTrue(Checks.isCreatedAtEqual(response));
     }
