@@ -4,30 +4,19 @@ import base.Common.Checks;
 import base.Constants;
 import base.CreateUserSteps;
 import base.Objects.UserObject;
-import base.Utils.Threshold;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.provider.MethodSource;
 
-//import java.time.temporal.ChronoUnit;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 import static base.Utils.ParserHelper.getJsonAsObjectUsingGson;
-import static base.Utils.ParserHelper.parseResponseToList;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Execution(ExecutionMode.CONCURRENT)
 public class UserTests {

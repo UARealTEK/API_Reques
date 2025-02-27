@@ -14,6 +14,9 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
+    private static final String QUERY_PARAM_ID = "id";
+
+
     private static final Log log = LogFactory.getLog(CreateUserSteps.class);
 
     public static Response postNewUserWithResponse(UserObject user) {
