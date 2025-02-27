@@ -9,9 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Constants {
-    public static String BASE_URL = "https://reqres.in/";
-    public static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
-    public static String JSON_FILE_PATH = "src/resources/user.json";
+    public static final String BASE_URL = "https://reqres.in/";
+    public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
+    public static final String JSON_FILE_PATH = "src/resources/user.json";
+    public static final String RESOURCES_PATH = "src/resources/";
+
+    public static final String BODY_KEY_DATA = "data";
+    public static final String QUERY_PARAM_ID = "id";
+
 
     public static Path getJSONFilePath () {
         return Paths.get(JSON_FILE_PATH);

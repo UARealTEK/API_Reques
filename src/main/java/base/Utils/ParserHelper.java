@@ -21,7 +21,7 @@ public class ParserHelper {
 
     @SneakyThrows
     public static <T> List<T> getJsonAsObjectUsingGson(String jsonFilePath, Class<T[]> cl) {
-        String jsonSting = new String(Files.readAllBytes(Paths.get((System.getProperty("src/resources/") + jsonFilePath))));
+        String jsonSting = new String(Files.readAllBytes(Paths.get((System.getProperty(Constants.RESOURCES_PATH) + jsonFilePath))));
         return Arrays.asList(new Gson().fromJson(jsonSting,cl));
     }
 

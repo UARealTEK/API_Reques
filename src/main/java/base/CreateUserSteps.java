@@ -14,8 +14,6 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    private static final String QUERY_PARAM_ID = "id";
-
 
     private static final Log log = LogFactory.getLog(CreateUserSteps.class);
 
@@ -30,7 +28,7 @@ public class CreateUserSteps {
         Response response = given()
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
 
-        return response.jsonPath().getList("data", UserObject.class);
+        return response.jsonPath().getList(Constants.BODY_KEY_DATA, UserObject.class);
     }
 
     public static Response getAllUsersRequest() {
@@ -40,7 +38,7 @@ public class CreateUserSteps {
 
     public static Response getUser(UserObject user) {
         return given()
-                .queryParam("id", user.getId())
+                .queryParam(Constants.QUERY_PARAM_ID, user.getId())
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
