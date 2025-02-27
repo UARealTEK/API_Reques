@@ -1,27 +1,40 @@
 package base;
 
-import base.Objects.UserObject;
-import base.utils.Endpoints;
+import base.Objects.BaseUserObject;
+import base.Objects.ExtendedUserObject;
+import base.Utils.Endpoints;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.json.JSONObject;
 
-import java.io.IOException;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    public static Response postNewUserWithResponse(UserObject user) {
+    public static Response postNewUserWithResponse(BaseUserObject user) {
         return  given()
+                .contentType(ContentType.JSON)
                 .body(user)
                 .post(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
-    public static Response getUser(String idKey) {
+    public static List<ExtendedUserObject> getAllUsers() {
+        Response response = given()
+                .get(Endpoints.getEndpoint(Endpoints.USERS));
+
+        return response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
+    }
+
+    public static Response getAllUsersRequest() {
         return given()
-                .queryParam("id", idKey)
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
+    public static Response getUser(ExtendedUserObject user) {
+        return given()
+                .queryParam(Constants.QUERY_PARAM_ID, user.getId())
+                .get(Endpoints.getEndpoint(Endpoints.USERS));
+    }
 
 }

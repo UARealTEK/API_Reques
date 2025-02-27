@@ -1,4 +1,4 @@
-package base.utils;
+package base.Utils;
 
 public enum Endpoints {
 
