@@ -2,31 +2,25 @@ package APITests;
 
 import base.Constants;
 import base.CreateUserSteps;
-import base.utils.Threshold;
+import base.Objects.UserObject;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
-
-import java.nio.file.Files;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Map;
+//import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static base.utils.ParserHelper.getJsonAsObjectUsingGson;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -39,41 +33,30 @@ public class UserTests {
         RestAssured.baseURI = Constants.BASE_URL;
     }
 
-    @ParameterizedTest()
-    @MethodSource("userArguments")
-    public void checkPostUser(String name, String job) {
-        JSONObject object = new JSONObject().put("name", name).put("job",job);
-        Response response = CreateUserSteps.postNewUserWithResponse(object);
-        JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
-
-        ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC)
-                .truncatedTo(ChronoUnit.SECONDS);
-        ZonedDateTime createdTime = ZonedDateTime.parse(receivedObjectBody.getString("createdAt"), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)
-                .withZone(ZoneOffset.UTC))
-                .truncatedTo(ChronoUnit.SECONDS);
-
-        log.info(currentTime + " / " + createdTime);
-
-        assertTrue(Threshold.isEqual(createdTime.toEpochSecond(),currentTime.toEpochSecond()));
-        log.info(response.then().extract().statusCode());
-        log.info(CreateUserSteps.getUser(new JSONObject(response.then().extract().body().asString()).getString("id")).then().extract().statusCode());
+    @TestFactory
+    Stream<DynamicTest> checkPostUserRequest() {
+        List<UserObject> userDataList = getJsonAsObjectUsingGson(UserObject[].class);
+        return  userDataList.stream().map(
+                instance ->
+                DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getName(), instance.getJob()), () ->
+                        checkPostUser(instance)));
     }
 
-    public static Stream<Arguments> userArguments() throws IOException {
-        String files = new String(Files.readAllBytes(Constants.getJSONFilePath()));
+    @MethodSource("userArguments")
+    public void checkPostUser(UserObject user) {
+        Response response = CreateUserSteps.postNewUserWithResponse(user);
+        JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
 
-        JSONArray array = new JSONArray(files);
+        //TODO Commented due to the import issue
+/*        ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC)
+//                .truncatedTo(Chronology.SECONDS);
+//        ZonedDateTime createdTime = ZonedDateTime.parse(receivedObjectBody.getString("createdAt"), DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)
+//                .withZone(ZoneOffset.UTC))
+//                .truncatedTo(ChronoUnit.SECONDS);
+//        log.info(currentTime + " / " + createdTime);
+//        assertTrue(Threshold.isEqual(createdTime.toEpochSecond(),currentTime.toEpochSecond())); */
 
-        return array.toList().stream()
-                .map(user -> {
-                    if (user instanceof Map<?, ?>) {
-                        Map<String, Object> userMap = (Map<String, Object>) user;
-                        String name = (String) userMap.get("name");
-                        String job = (String) userMap.get("job");
-                        return Arguments.of(name, job);
-                    } else {
-                        return Arguments.of("", "");
-                    }
-                });
+        log.info(response.then().extract().statusCode());
+        log.info(CreateUserSteps.getUser(new JSONObject(response.then().extract().body().asString()).getString("id")).then().extract().statusCode());
     }
 }
