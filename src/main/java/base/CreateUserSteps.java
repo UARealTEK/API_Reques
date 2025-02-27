@@ -1,5 +1,6 @@
 package base;
 
+import base.Objects.UserObject;
 import base.utils.Endpoints;
 import io.restassured.response.Response;
 import org.json.JSONObject;
@@ -10,10 +11,9 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserSteps {
 
-    public static Response postNewUserWithResponse(JSONObject object) {
-
+    public static Response postNewUserWithResponse(UserObject user) {
         return  given()
-                .body(object)
+                .body(user)
                 .post(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
