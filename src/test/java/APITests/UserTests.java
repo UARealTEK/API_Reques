@@ -16,12 +16,10 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.provider.MethodSource;
 
-//import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static base.utils.ParserHelper.getJsonAsObjectUsingGson;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Execution(ExecutionMode.CONCURRENT)
 public class UserTests {
