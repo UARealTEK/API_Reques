@@ -8,8 +8,6 @@ import base.Objects.ExtendedUserObject;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
