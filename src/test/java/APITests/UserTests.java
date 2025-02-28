@@ -46,7 +46,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkPostRandomUser() {
-        List<BaseUserObject> userDataList = FakerUser.createFakerUserList();
+        List<BaseUserObject> userDataList = FakerUser.createFakerUserList(10);
         return userDataList.stream().map(
                 instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s random user", instance.getName(), instance.getJob()), () ->
                         checkPostUser(instance))

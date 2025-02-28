@@ -16,11 +16,10 @@ public class FakerUser {
         return new BaseUserObject(faker.name().firstName(),faker.job().title());
     }
 
-    public static List<BaseUserObject> createFakerUserList() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
+    public static List<BaseUserObject> createFakerUserList(int countOfGeneratedUsers) {
         List<BaseUserObject> list = new ArrayList<>();
 
-        for (int i = 0; i < random.nextInt(getAllUsers().size()); i++) {
+        for (int i = 0; i < countOfGeneratedUsers; i++) {
             list.add(createFakerUser());
         }
 
