@@ -2,8 +2,6 @@ package base.Utils;
 
 import base.Objects.BaseUserObject;
 import com.github.javafaker.Faker;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
