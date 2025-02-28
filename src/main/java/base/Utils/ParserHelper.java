@@ -1,4 +1,4 @@
-package base.utils;
+package base.Utils;
 
 import base.Constants;
 import com.google.gson.Gson;
@@ -19,8 +19,11 @@ public class ParserHelper {
 
     @SneakyThrows
     public static <T> List<T> getJsonAsObjectUsingGson(String jsonFilePath, Class<T[]> cl) {
-        String jsonSting = new String(Files.readAllBytes(Paths.get((System.getProperty("user.dir") + jsonFilePath))));
+        String jsonSting = new String(Files.readAllBytes(Paths.get((System.getProperty(Constants.RESOURCES_PATH) + jsonFilePath))));
         return Arrays.asList(new Gson().fromJson(jsonSting,cl));
-
     }
+
+
+
+
 }
