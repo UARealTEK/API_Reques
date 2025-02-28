@@ -5,6 +5,7 @@ import base.Constants;
 import base.CreateUserSteps;
 import base.Objects.BaseUserObject;
 import base.Objects.ExtendedUserObject;
+import base.Utils.FakerUser;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
@@ -40,6 +41,15 @@ public class UserTests {
         return userDataList.stream().map(
                 instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getFirst_name(), instance.getLast_name()), () ->
                         checkSpecificUser(instance))
+        );
+    }
+
+    @TestFactory
+    Stream<DynamicTest> checkPostRandomUser() {
+        List<BaseUserObject> userDataList = FakerUser.createFakerUserList();
+        return userDataList.stream().map(
+                instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s random user", instance.getName(), instance.getJob()), () ->
+                        checkPostUser(instance))
         );
     }
 
