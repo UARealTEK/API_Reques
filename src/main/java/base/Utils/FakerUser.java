@@ -10,11 +10,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static base.CreateUserSteps.getAllUsers;
-import static base.CreateUserSteps.getAllUsersRequest;
 
 public class FakerUser {
-
-    private static final Log log = LogFactory.getLog(FakerUser.class);
 
     public static BaseUserObject createFakerUser() {
         Faker faker = new Faker();
