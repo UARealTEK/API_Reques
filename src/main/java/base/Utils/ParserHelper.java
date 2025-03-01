@@ -12,15 +12,9 @@ import java.util.List;
 public class ParserHelper {
 
     @SneakyThrows
-    public static <T> List<T> getJsonAsObjectUsingGson(Class<T[]> cl) {
-        String files = new String(Files.readAllBytes(Constants.getJSONFilePath()));
-        return Arrays.asList(new Gson().fromJson(files,cl));
-    }
-
-    @SneakyThrows
     public static <T> List<T> getJsonAsObjectUsingGson(String jsonFilePath, Class<T[]> cl) {
-        String jsonSting = new String(Files.readAllBytes(Paths.get((System.getProperty(Constants.RESOURCES_PATH) + jsonFilePath))));
-        return Arrays.asList(new Gson().fromJson(jsonSting,cl));
+        String jsonString = new String(Files.readAllBytes(Paths.get(Constants.RESOURCES_PATH + jsonFilePath)));
+        return Arrays.asList(new Gson().fromJson(jsonString, cl));
     }
 
 

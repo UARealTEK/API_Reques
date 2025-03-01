@@ -1,11 +1,8 @@
 package base.Common;
 
 import base.Constants;
-import base.CreateUserSteps;
 import base.Utils.Threshold;
 import io.restassured.response.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import java.time.ZoneOffset;
@@ -14,8 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Checks {
-
-    private static final Log log = LogFactory.getLog(Checks.class);
 
     public static boolean isCreatedAtEqual(Response response) {
         JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
@@ -34,5 +29,9 @@ public class Checks {
 
     public static boolean isGetRequestValid(Response response) {
         return response.then().extract().statusCode() == 200;
+    }
+
+    public static boolean isUserNotFound(Response response) {
+        return response.then().extract().statusCode() == 404;
     }
 }
