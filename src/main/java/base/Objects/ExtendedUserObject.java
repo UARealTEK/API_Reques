@@ -9,8 +9,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserObject {
-    String name;
-    String job;
+public class ExtendedUserObject extends BaseUserObject {
+
+    String id;
+    String createdAt;
+    String first_name;
+    String last_name;
+    String email;
+    String avatar;
+
 
 }
