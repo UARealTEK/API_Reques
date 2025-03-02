@@ -1,4 +1,4 @@
-package base.Common;
+package base.Common.UserChecks;
 
 import base.Constants;
 import base.Utils.Threshold;
@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class Checks {
+public class UserChecks {
 
     public static boolean isCreatedAtEqual(Response response) {
         JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
@@ -25,10 +25,6 @@ public class Checks {
 
     public static boolean isUserCreated(Response response) {
         return response.then().extract().statusCode() == 201;
-    }
-
-    public static boolean isGetRequestValid(Response response) {
-        return response.then().extract().statusCode() == 200;
     }
 
     public static boolean isUserNotFound(Response response) {

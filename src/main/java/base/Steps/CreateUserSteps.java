@@ -1,7 +1,8 @@
-package base;
+package base.Steps;
 
-import base.Objects.BaseUserObject;
-import base.Objects.ExtendedUserObject;
+import base.Constants;
+import base.Objects.UserObjects.BaseUserObject;
+import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -55,13 +56,6 @@ public class CreateUserSteps {
         return given()
                 .queryParam(Constants.QUERY_PARAM_ID, id)
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
-    }
-
-    public static ExtendedUserObject getUserAsObject(ExtendedUserObject user) {
-        Response response = given()
-                .queryParam(Constants.QUERY_PARAM_ID, user.getId())
-                .get(Endpoints.getEndpoint(Endpoints.USERS));
-        return response.jsonPath().getObject(Constants.BODY_KEY_DATA,ExtendedUserObject.class);
     }
 
 }
