@@ -69,4 +69,9 @@ public class CreateUserSteps {
                         .put(Endpoints.getEndpoint(Endpoints.USERS) + "/" + user.getId());
     }
 
+    public static Response deleteUser(ExtendedUserObject user) {
+       return given()
+                .delete(Endpoints.getEndpoint(Endpoints.USERS) + "/" + user.getId());
+    }
+
 }

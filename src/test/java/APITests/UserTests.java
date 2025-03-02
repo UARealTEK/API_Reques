@@ -55,7 +55,6 @@ public class UserTests {
         );
     }
 
-    // Does not work as intended due to the fact that POST request with Invalid user Data goes through with 200 statusCode
     @TestFactory
     Stream<DynamicTest> checkPostInvalidRequest() {
         List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(Constants.INVALID_JSON_FILE_PATH, BaseUserObject[].class);
@@ -71,6 +70,15 @@ public class UserTests {
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkPutUser(object))
+        );
+    }
+
+    @TestFactory
+    Stream<DynamicTest> checkDeleteUser() {
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
+        return userDataList.stream().map(
+                object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
+                        checkDeleteUser(object))
         );
     }
 
@@ -104,7 +112,13 @@ public class UserTests {
 
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
         Assertions.assertNotEquals(expectedUser.getJob(), user.getJob());
+
         Assertions.assertNotEquals(expectedUser.getName(), user.getName());
         Assertions.assertTrue(UserChecks.isUpdatedAtEqual(response));
+    }
+
+    public void checkDeleteUser(ExtendedUserObject user) {
+        Response response = CreateUserSteps.deleteUser(user);
+        Assertions.assertTrue(GenericChecks.isElementDeleted(response));
     }
 }
