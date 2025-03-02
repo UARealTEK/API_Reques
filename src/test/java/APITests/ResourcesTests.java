@@ -28,7 +28,7 @@ public class ResourcesTests {
 
     @Test
     public void checkGetAllResources() {
-        Assertions.assertTrue(GenericChecks.isGetRequestValid(CreateResourcesSteps.getAllResourcesRequest()));
+        Assertions.assertTrue(GenericChecks.isRequestValid(CreateResourcesSteps.getAllResourcesRequest()));
     }
 
     @Test
@@ -39,6 +39,6 @@ public class ResourcesTests {
 
     public void checkGetResource(int resourceID) {
         Response response = CreateResourcesSteps.getResource(resourceID);
-        Assertions.assertTrue(GenericChecks.isGetRequestValid(response));
+        Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 }

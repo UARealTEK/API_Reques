@@ -20,13 +20,13 @@ public class CreateResourcesSteps {
 
         do {
             Response response = given()
-                    .queryParam("page",currentPage)
+                    .queryParam(Constants.QUERY_PARAM_PAGE,currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.RESOURSES));
 
             List<Resources> resources = response.jsonPath().getList(Constants.BODY_KEY_DATA, Resources.class);
             allResources.addAll(resources);
             currentPage++;
-            totalPages = response.jsonPath().getInt("total_pages");
+            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
         } while (currentPage <= totalPages);
 
         return allResources;

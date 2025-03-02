@@ -4,6 +4,7 @@ import base.Constants;
 import base.Objects.UserObjects.BaseUserObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
+import base.Utils.FakerData;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -29,12 +30,12 @@ public class CreateUserSteps {
 
         do {
             Response response = given()
-                    .queryParam("page",currentPage)
+                    .queryParam(Constants.QUERY_PARAM_PAGE,currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.USERS));
 
             List<ExtendedUserObject> users = response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
             allUsers.addAll(users);
-            totalPages = response.jsonPath().getInt("total_pages");
+            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
             currentPage++;
 
         } while (currentPage <= totalPages);
@@ -56,6 +57,16 @@ public class CreateUserSteps {
         return given()
                 .queryParam(Constants.QUERY_PARAM_ID, id)
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
+    }
+
+    public static Response putUser(ExtendedUserObject user) {
+        BaseUserObject objectBody = FakerData.createFakerUser();
+        return
+                given()
+                        .contentType(ContentType.JSON)
+                        .accept(ContentType.JSON)
+                        .body(objectBody)
+                        .put(Endpoints.getEndpoint(Endpoints.USERS) + "/" + user.getId());
     }
 
 }

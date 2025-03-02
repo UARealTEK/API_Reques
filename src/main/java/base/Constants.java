@@ -9,5 +9,11 @@ public class Constants {
 
 
     public static final String BODY_KEY_DATA = "data";
+    public static final String BODY_KEY_CREATED_AT = "createdAt";
+    public static final String BODY_KEY_UPDATED_AT = "updatedAt";
     public static final String QUERY_PARAM_ID = "id";
+    public static final String QUERY_PARAM_PAGE = "page";
+
+
+    public static final String RESPONSE_KEY_TOTAL_PAGES = "total_pages";
 }

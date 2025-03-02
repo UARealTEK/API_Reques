@@ -13,6 +13,7 @@ public class ExtendedUserObject extends BaseUserObject {
 
     String id;
     String createdAt;
+    String updatedAt;
     String first_name;
     String last_name;
     String email;

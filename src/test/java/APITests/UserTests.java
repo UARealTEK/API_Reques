@@ -15,8 +15,10 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
+import static base.Steps.CreateUserSteps.getAllUsers;
 import static base.Steps.CreateUserSteps.getLastCreatedUser;
 import static base.Utils.ParserHelper.getJsonAsObjectUsingGson;
 
@@ -65,10 +67,19 @@ public class UserTests {
                                 checkPostUser(instance)));
     }
 
+    @TestFactory
+    Stream<DynamicTest> checkPutUser() {
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
+        return userDataList.stream().map(
+                object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
+                        checkPutUser(object))
+        );
+    }
+
     @Test
     public void checkGetAllUsers() {
         Response response = CreateUserSteps.getAllUsersRequest();
-        Assertions.assertTrue(GenericChecks.isGetRequestValid(response));
+        Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 
     @Test
@@ -79,7 +90,7 @@ public class UserTests {
 
     public void checkSpecificUser(int userID) {
         Response response = CreateUserSteps.getUser(userID);
-        Assertions.assertTrue(GenericChecks.isGetRequestValid(response));
+        Assertions.assertTrue(GenericChecks.isRequestValid(response));
         Assertions.assertFalse(GenericChecks.isElementNotFound(response));
     }
 
@@ -87,5 +98,15 @@ public class UserTests {
         Response response = CreateUserSteps.postNewUserWithResponse(user);
         Assertions.assertTrue(UserChecks.isUserCreated(response));
         Assertions.assertTrue(UserChecks.isCreatedAtEqual(response));
+    }
+
+    public void checkPutUser(ExtendedUserObject user) {
+        Response response = CreateUserSteps.putUser(user);
+        ExtendedUserObject expectedUser = response.as(ExtendedUserObject.class);
+
+        Assertions.assertTrue(GenericChecks.isRequestValid(response));
+        Assertions.assertNotEquals(expectedUser.getJob(), user.getJob());
+        Assertions.assertNotEquals(expectedUser.getName(), user.getName());
+        Assertions.assertTrue(UserChecks.isUpdatedAtEqual(response));
     }
 }
