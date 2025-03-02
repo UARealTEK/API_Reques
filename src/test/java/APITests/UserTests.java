@@ -74,13 +74,13 @@ public class UserTests {
     @Test
     public void checkGetInvalidUser() {
         Response response = CreateUserSteps.getUser(Integer.parseInt(getLastCreatedUser().getId()) + 1);
-        Assertions.assertTrue(UserChecks.isUserNotFound(response));
+        Assertions.assertTrue(GenericChecks.isElementNotFound(response));
     }
 
     public void checkSpecificUser(int userID) {
         Response response = CreateUserSteps.getUser(userID);
         Assertions.assertTrue(GenericChecks.isGetRequestValid(response));
-        Assertions.assertFalse(UserChecks.isUserNotFound(response));
+        Assertions.assertFalse(GenericChecks.isElementNotFound(response));
     }
 
     public void checkPostUser(BaseUserObject user) {

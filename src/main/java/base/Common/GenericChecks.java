@@ -7,5 +7,7 @@ public class GenericChecks {
     public static boolean isGetRequestValid(Response response) {
         return response.then().extract().statusCode() == 200;
     }
-
+    public static boolean isElementNotFound(Response response) {
+        return response.then().extract().statusCode() == 404;
+    }
 }

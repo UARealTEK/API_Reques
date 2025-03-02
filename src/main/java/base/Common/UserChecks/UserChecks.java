@@ -26,8 +26,4 @@ public class UserChecks {
     public static boolean isUserCreated(Response response) {
         return response.then().extract().statusCode() == 201;
     }
-
-    public static boolean isUserNotFound(Response response) {
-        return response.then().extract().statusCode() == 404;
-    }
 }

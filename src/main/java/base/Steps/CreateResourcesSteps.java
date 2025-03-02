@@ -6,6 +6,7 @@ import base.Utils.Endpoints;
 import io.restassured.response.Response;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -40,6 +41,10 @@ public class CreateResourcesSteps {
         return given()
                 .queryParam(Constants.QUERY_PARAM_ID, ResourceId)
                 .get(Endpoints.getEndpoint(Endpoints.RESOURSES));
+    }
+
+    public static Resources getLastResource() {
+        return getAllResources().stream().max(Comparator.comparingInt(Resources::getId)).orElse(null);
     }
 
 }

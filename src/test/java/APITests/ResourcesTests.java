@@ -23,7 +23,7 @@ public class ResourcesTests {
         List<Resources> resourcesList = CreateResourcesSteps.getAllResources();
         return resourcesList.stream().map(resource ->
                 DynamicTest.dynamicTest(String.format("Checking resource %s", resource.getName()), () ->
-                        getResource(resource.getId())));
+                        checkGetResource(resource.getId())));
     }
 
     @Test
@@ -31,7 +31,13 @@ public class ResourcesTests {
         Assertions.assertTrue(GenericChecks.isGetRequestValid(CreateResourcesSteps.getAllResourcesRequest()));
     }
 
-    public void getResource(int resourceID) {
+    @Test
+    public void checkGetInvalidResource() {
+        Response response = CreateResourcesSteps.getResource(CreateResourcesSteps.getLastResource().getId() + 1);
+        Assertions.assertTrue(GenericChecks.isElementNotFound(response));
+    }
+
+    public void checkGetResource(int resourceID) {
         Response response = CreateResourcesSteps.getResource(resourceID);
         Assertions.assertTrue(GenericChecks.isGetRequestValid(response));
     }
