@@ -1,6 +1,5 @@
 package base.Utils;
 
-import base.Objects.ResourceObjects.Resources;
 import base.Objects.UserObjects.BaseUserObject;
 import com.github.javafaker.Faker;
 
