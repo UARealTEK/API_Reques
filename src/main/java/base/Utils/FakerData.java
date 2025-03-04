@@ -22,4 +22,5 @@ public class FakerData {
 
         return list;
     }
+
 }
