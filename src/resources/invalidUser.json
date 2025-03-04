@@ -1,0 +1,26 @@
+[
+  {
+    "name": "",
+    "job": 123
+  },
+  {
+    "name": null,
+    "job": ""
+  },
+  {
+    "name": 456,
+    "job": null
+  },
+  {
+    "name": "[]",
+    "job": false
+  },
+  {
+    "name": true,
+    "job": false
+  },
+  {
+    "name": "",
+    "job": ""
+  }
+]

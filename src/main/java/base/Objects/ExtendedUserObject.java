@@ -18,5 +18,4 @@ public class ExtendedUserObject extends BaseUserObject {
     String email;
     String avatar;
 
-
 }

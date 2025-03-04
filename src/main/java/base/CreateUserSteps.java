@@ -6,6 +6,8 @@ import base.Utils.Endpoints;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -20,10 +22,23 @@ public class CreateUserSteps {
     }
 
     public static List<ExtendedUserObject> getAllUsers() {
-        Response response = given()
-                .get(Endpoints.getEndpoint(Endpoints.USERS));
+        List<ExtendedUserObject> allUsers = new ArrayList<>();
+        int currentPage = 1;
+        int totalPages;
 
-        return response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
+        do {
+            Response response = given()
+                    .queryParam("page",currentPage)
+                    .get(Endpoints.getEndpoint(Endpoints.USERS));
+
+            List<ExtendedUserObject> users = response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
+            allUsers.addAll(users);
+            totalPages = response.jsonPath().getInt("total_pages");
+            currentPage++;
+
+        } while (currentPage <= totalPages);
+
+        return allUsers;
     }
 
     public static Response getAllUsersRequest() {
@@ -31,10 +46,22 @@ public class CreateUserSteps {
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
-    public static Response getUser(ExtendedUserObject user) {
+    public static ExtendedUserObject getLastCreatedUser() {
+        return getAllUsers().stream()
+                 .max(Comparator.comparingInt(user -> Integer.parseInt(user.getId()))).orElse(null);
+    }
+
+    public static Response getUser(int id) {
         return given()
+                .queryParam(Constants.QUERY_PARAM_ID, id)
+                .get(Endpoints.getEndpoint(Endpoints.USERS));
+    }
+
+    public static ExtendedUserObject getUserAsObject(ExtendedUserObject user) {
+        Response response = given()
                 .queryParam(Constants.QUERY_PARAM_ID, user.getId())
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
+        return response.jsonPath().getObject(Constants.BODY_KEY_DATA,ExtendedUserObject.class);
     }
 
 }
