@@ -19,4 +19,8 @@ public class ExtendedUserObject extends BaseUserObject {
     String email;
     String avatar;
 
+    public ExtendedUserObject(String email) {
+        this.email = email;
+    }
+
 }

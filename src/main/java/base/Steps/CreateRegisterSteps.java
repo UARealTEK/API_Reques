@@ -11,6 +11,7 @@ import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static io.restassured.RestAssured.given;
 
@@ -56,7 +57,17 @@ public class CreateRegisterSteps {
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
+    public static ExtendedUserObject getRandomRegisteredUser() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        List<ExtendedUserObject> userList = CreateUserSteps.getAllUsers();
+
+        return userList.get(random.nextInt(userList.size()));
+    }
+
     public static RegisterObject getLastRegisteredUser() {
-        return getAllRegisteredUsers().stream().max(Comparator.comparingInt(RegisterObject::getId)).orElse(null);
+        return getAllRegisteredUsers()
+                .stream()
+                .max(Comparator.comparingInt(RegisterObject::getId))
+                .orElse(null);
     }
 }

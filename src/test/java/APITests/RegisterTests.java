@@ -6,17 +6,25 @@ import base.Constants;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Steps.CreateUserSteps;
+import base.Utils.Endpoints;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static base.Steps.CreateRegisterSteps.*;
+import static io.restassured.RestAssured.given;
 
 public class RegisterTests {
 
+
+    private static final Log log = LogFactory.getLog(RegisterTests.class);
 
     @BeforeEach
     void setUp() {
@@ -43,6 +51,30 @@ public class RegisterTests {
     @Test
     public void checkGetAllRegisteredUsers() {
         Assertions.assertTrue(GenericChecks.isRequestValid(getAllRegisteredUsersRequest()));
+    }
+
+    @Test
+    public void checkPostUserWithoutPassword() {
+        ExtendedUserObject object = new ExtendedUserObject(getRandomRegisteredUser().getEmail());
+
+        Assertions.assertTrue(GenericChecks.isRequestInvalid(
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(object)
+                        .post(Endpoints.getEndpoint(Endpoints.REGISTER)))
+        );
+    }
+
+    @Test
+    public void checkPostUserWithoutEmail() {
+        RegisterObject object = new RegisterObject(new Faker().internet().password());
+
+        Assertions.assertTrue(GenericChecks.isRequestInvalid(
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(object)
+                        .post(Endpoints.getEndpoint(Endpoints.REGISTER)))
+        );
     }
 
     public void checkGetSingleRegisteredUser(RegisterObject user) {

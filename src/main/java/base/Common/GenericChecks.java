@@ -13,4 +13,7 @@ public class GenericChecks {
     public static boolean isElementDeleted(Response response) {
         return response.then().extract().statusCode() == 204;
     }
+    public static boolean isRequestInvalid(Response response) {
+        return response.then().extract().statusCode() == 400;
+    }
 }

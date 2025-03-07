@@ -15,4 +15,8 @@ public class RegisterObject {
     int year;
     String color;
     String pantone_value;
+
+    public RegisterObject(String password) {
+        this.password = password;
+    }
 }
