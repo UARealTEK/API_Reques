@@ -1,4 +1,4 @@
-package base.Objects;
+package base.Objects.UserObjects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,14 @@ public class ExtendedUserObject extends BaseUserObject {
 
     String id;
     String createdAt;
+    String updatedAt;
     String first_name;
     String last_name;
     String email;
     String avatar;
+
+    public ExtendedUserObject(String email) {
+        this.email = email;
+    }
 
 }
