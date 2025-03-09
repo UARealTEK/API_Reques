@@ -11,9 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginObject {
 
-    int id;
-    String name;
-    int year;
-    String color;
-    String pantone_value;
+    String email;
+    String password;
 }

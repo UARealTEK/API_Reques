@@ -3,8 +3,11 @@ package APITests;
 import base.Common.GenericChecks;
 import base.Constants;
 import base.Objects.LoginObjects.LoginObject;
+import base.Objects.RegisterObjects.RegisterObject;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
@@ -13,10 +16,11 @@ import org.junit.jupiter.api.TestFactory;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static base.Steps.CreateLoginSteps.getAllLoggedInUsers;
-import static base.Steps.CreateLoginSteps.getLoggedInUser;
+import static base.Steps.CreateLoginSteps.*;
 
 public class LoginTests {
+
+    private static final Log log = LogFactory.getLog(LoginTests.class);
 
     @BeforeEach
     void setUp() {
@@ -24,15 +28,29 @@ public class LoginTests {
     }
 
     @TestFactory
-    Stream<DynamicTest> getSingleUser() {
-        List<LoginObject> loggedInUsersList = getAllLoggedInUsers();
-        return loggedInUsersList.stream()
+    Stream<DynamicTest> getSingleLoggedInUser() {
+        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
+        return registeredUsersList.stream()
                 .map(object ->
                         DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkGetSingleUser(object)));
     }
 
-    public void checkGetSingleUser(LoginObject user) {
+    @TestFactory
+    Stream<DynamicTest> postLoginUser() {
+        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
+        return registeredUsersList.stream()
+                .map(object ->
+                        DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkUserLogin(object)));
+    }
+
+    public void checkGetSingleUser(RegisterObject user) {
         Response response = getLoggedInUser(user.getId());
+        Assertions.assertTrue(GenericChecks.isRequestValid(response));
+    }
+
+    public void checkUserLogin(RegisterObject user) {
+        Response response = logInExistingUser(user.getId());
+        log.info(response.then().log().body());
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 }

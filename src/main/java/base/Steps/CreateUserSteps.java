@@ -59,6 +59,12 @@ public class CreateUserSteps {
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
+    public static ExtendedUserObject getUserObject(int userID) {
+        return getAllUsers().stream()
+                .filter(user -> Integer.parseInt(user.getId()) == userID)
+                .findFirst().orElse(null);
+    }
+
     public static Response putUser(ExtendedUserObject user) {
         BaseUserObject objectBody = FakerData.createFakerUser();
         return

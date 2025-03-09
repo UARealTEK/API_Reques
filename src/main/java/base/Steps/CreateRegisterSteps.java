@@ -1,6 +1,7 @@
 package base.Steps;
 
 import base.Constants;
+import base.Objects.LoginObjects.LoginObject;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
@@ -55,6 +56,22 @@ public class CreateRegisterSteps {
                 .contentType(ContentType.JSON)
                 .body(object)
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
+    }
+
+    public static void postRegister(ExtendedUserObject body, String password) {
+        RegisterObject object = new RegisterObject();
+        object.setEmail(body.getEmail());
+        object.setPassword(password);
+        given()
+                .contentType(ContentType.JSON)
+                .body(object)
+                .post(Endpoints.getEndpoint(Endpoints.REGISTER));
+    }
+
+    public static LoginObject getRegisteredUserData(int userId) {
+        String password = new Faker().internet().password();
+        CreateRegisterSteps.postRegister(CreateUserSteps.getUserObject(userId), password);
+        return new LoginObject(CreateUserSteps.getUserObject(userId).getEmail(), password);
     }
 
     public static ExtendedUserObject getRandomRegisteredUser() {

@@ -2,19 +2,22 @@ package base.Steps;
 
 import base.Constants;
 import base.Objects.LoginObjects.LoginObject;
+import base.Objects.RegisterObjects.RegisterObject;
 import base.Utils.Endpoints;
+import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static base.Steps.CreateRegisterSteps.getRegisteredUserData;
 import static io.restassured.RestAssured.given;
 
 public class CreateLoginSteps {
 
-    public static List<LoginObject> getAllLoggedInUsers() {
-        List<LoginObject> allLoggedInUsers = new ArrayList<>();
+    public static List<RegisterObject> getAllLoggedInUsers() {
+        List<RegisterObject> allLoggedInUsers = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -22,7 +25,7 @@ public class CreateLoginSteps {
             Response response = given()
                     .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.LOGIN));
-            List<LoginObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, LoginObject.class);
+            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
 
             allLoggedInUsers.addAll(objects);
             currentPage++;
@@ -39,6 +42,17 @@ public class CreateLoginSteps {
                 .get(Endpoints.getEndpoint(Endpoints.LOGIN));
 
     }
+
+    public static Response logInExistingUser(int userID) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(getRegisteredUserData(userID))
+                .post(Endpoints.getEndpoint(Endpoints.LOGIN));
+    }
+
+
+
+
 
 
 

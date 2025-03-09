@@ -23,4 +23,5 @@ public class ExtendedUserObject extends BaseUserObject {
         this.email = email;
     }
 
+
 }
