@@ -67,12 +67,10 @@ public class RegisterTests {
 
     @Test
     public void checkPostUserWithoutEmail() {
-        RegisterObject object = new RegisterObject(new Faker().internet().password());
-
         Assertions.assertTrue(GenericChecks.isRequestInvalid(
                 given()
                         .contentType(ContentType.JSON)
-                        .body(object)
+                        .body(new Faker().internet().password())
                         .post(Endpoints.getEndpoint(Endpoints.REGISTER)))
         );
     }

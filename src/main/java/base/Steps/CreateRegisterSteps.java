@@ -8,6 +8,9 @@ import base.Utils.Endpoints;
 import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,6 +20,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import static io.restassured.RestAssured.given;
 
 public class CreateRegisterSteps {
+
+    private static final Log log = LogFactory.getLog(CreateRegisterSteps.class);
 
     public static List<RegisterObject> getAllRegisteredUsers() {
         List<RegisterObject> allRegisteredUsers = new ArrayList<>();
@@ -49,19 +54,20 @@ public class CreateRegisterSteps {
     }
 
     public static Response postRegister(ExtendedUserObject body) {
-        RegisterObject object = new RegisterObject();
-        object.setEmail(body.getEmail());
-        object.setPassword(new Faker().internet().password());
+        JSONObject object = new JSONObject();
+        object.put("email",body.getEmail());
+        object.put("password",new Faker().internet().password());
+
         return given()
                 .contentType(ContentType.JSON)
-                .body(object)
+                .body(object.toString())
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
     public static void postRegister(ExtendedUserObject body, String password) {
-        RegisterObject object = new RegisterObject();
-        object.setEmail(body.getEmail());
-        object.setPassword(password);
+        JSONObject object = new JSONObject();
+        object.put("email",body.getEmail());
+        object.put("password",password);
         given()
                 .contentType(ContentType.JSON)
                 .body(object)
