@@ -1,10 +1,8 @@
 package base.Steps;
 
 import base.Constants;
-import base.Objects.LoginObjects.LoginObject;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Utils.Endpoints;
-import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 

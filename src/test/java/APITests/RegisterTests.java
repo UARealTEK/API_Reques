@@ -8,6 +8,7 @@ import base.Objects.UserObjects.ExtendedUserObject;
 import base.Steps.CreateUserSteps;
 import base.Utils.Endpoints;
 import com.github.javafaker.Faker;
+import com.google.gson.reflect.TypeToken;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -34,7 +35,7 @@ public class RegisterTests {
 
     @TestFactory
     Stream<DynamicTest> checkGetRegisteredUser() {
-        List<RegisterObject> users = getAllRegisteredUsers();
+        List<RegisterObject<Integer>> users = getAllRegisteredUsers(Integer.class);
         return users.stream().map(user ->
             DynamicTest.dynamicTest(String.format("checking for user: %s", user.getName()), () ->
                     checkGetSingleRegisteredUser(user)));
@@ -42,7 +43,7 @@ public class RegisterTests {
 
     @TestFactory
     Stream<DynamicTest> checkPostRegisterUser() {
-        List<ExtendedUserObject> list = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> list = CreateUserSteps.getAllUsers();
         return list.stream().map(registeredUser ->
                 DynamicTest.dynamicTest(String.format("Checking post for id: %s and name %s", registeredUser.getId(),registeredUser.getEmail()), () ->
                         checkPostRegisterUser(registeredUser)));
@@ -55,7 +56,7 @@ public class RegisterTests {
 
     @Test
     public void checkPostUserWithoutPassword() {
-        ExtendedUserObject object = new ExtendedUserObject(getRandomRegisteredUser().getEmail());
+        ExtendedUserObject<Integer> object = new ExtendedUserObject<>(getRandomRegisteredUser().getEmail());
 
         Assertions.assertTrue(GenericChecks.isRequestInvalid(
                 given()
@@ -75,12 +76,12 @@ public class RegisterTests {
         );
     }
 
-    public void checkGetSingleRegisteredUser(RegisterObject user) {
+    public void checkGetSingleRegisteredUser(RegisterObject<Integer> user) {
         Response response = getRegisteredUser(user.getId());
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 
-    public void checkPostRegisterUser(ExtendedUserObject body) {
+    public void checkPostRegisterUser(ExtendedUserObject<Integer> body) {
         Response response = postRegister(body);
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
         Assertions.assertTrue(RegisterChecks.isIDMatchedWithResponseID(response,body));

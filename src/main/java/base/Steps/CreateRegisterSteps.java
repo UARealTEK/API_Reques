@@ -6,6 +6,8 @@ import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
 import com.github.javafaker.Faker;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.logging.Log;
@@ -23,8 +25,8 @@ public class CreateRegisterSteps {
 
     private static final Log log = LogFactory.getLog(CreateRegisterSteps.class);
 
-    public static List<RegisterObject> getAllRegisteredUsers() {
-        List<RegisterObject> allRegisteredUsers = new ArrayList<>();
+    public static <T> List<RegisterObject<T>> getAllRegisteredUsers(Class<T> type) {
+        List<RegisterObject<T>> allRegisteredUsers = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -32,7 +34,10 @@ public class CreateRegisterSteps {
             Response response = given()
                     .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.REGISTER));
-            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
+
+            String responseBody = response.jsonPath().getString(Constants.BODY_KEY_DATA);
+            Gson gson = new Gson();
+            List<RegisterObject<T>> objects = gson.fromJson(responseBody, new TypeToken<List<RegisterObject<T>>>(){}.getType());
 
             allRegisteredUsers.addAll(objects);
             currentPage++;
@@ -41,6 +46,7 @@ public class CreateRegisterSteps {
 
         return allRegisteredUsers;
     }
+
 
     public static Response getAllRegisteredUsersRequest() {
         return given()
@@ -80,14 +86,14 @@ public class CreateRegisterSteps {
         return new LoginObject(CreateUserSteps.getUserObject(userId).getEmail(), password);
     }
 
-    public static ExtendedUserObject getRandomRegisteredUser() {
+    public static ExtendedUserObject<String> getRandomRegisteredUser() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        List<ExtendedUserObject> userList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<String>> userList = CreateUserSteps.getAllUsers();
 
         return userList.get(random.nextInt(userList.size()));
     }
 
-    public static RegisterObject getLastRegisteredUser() {
+    public static RegisterObject<Integer> getLastRegisteredUser() {
         return getAllRegisteredUsers()
                 .stream()
                 .max(Comparator.comparingInt(RegisterObject::getId))
