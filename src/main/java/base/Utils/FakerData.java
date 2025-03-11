@@ -1,15 +1,12 @@
 package base.Utils;
 
-import base.Objects.BaseUserObject;
+import base.Objects.UserObjects.BaseUserObject;
 import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static base.CreateUserSteps.getAllUsers;
-
-public class FakerUser {
+public class FakerData {
 
     public static BaseUserObject createFakerUser() {
         Faker faker = new Faker();
@@ -25,4 +22,5 @@ public class FakerUser {
 
         return list;
     }
+
 }

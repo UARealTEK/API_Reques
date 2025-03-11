@@ -2,7 +2,9 @@ package base.Utils;
 
 public enum Endpoints {
 
-    USERS("api/users");
+    USERS("api/users"),
+    RESOURSES("api/unknown"),
+    REGISTER("api/register");
 
     private final String endpoint;
 
