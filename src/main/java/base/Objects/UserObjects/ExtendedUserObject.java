@@ -9,11 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExtendedUserObject extends BaseUserObject {
+public class ExtendedUserObject<T> extends BaseUserObject {
 
-    String id;
-    String createdAt;
-    String updatedAt;
+    T id;
     String first_name;
     String last_name;
     String email;
@@ -23,4 +21,7 @@ public class ExtendedUserObject extends BaseUserObject {
         this.email = email;
     }
 
+    public ExtendedUserObject(T id) {
+        this.id = id;
+    }
 }

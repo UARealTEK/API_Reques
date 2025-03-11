@@ -39,10 +39,10 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkGetUserRequest() {
-        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getFirst_name(), instance.getLast_name()), () ->
-                        checkSpecificUser(Integer.parseInt(instance.getId())))
+                        checkSpecificUser(instance.getId()))
         );
     }
 
@@ -66,7 +66,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkPutUser() {
-        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkPutUser(object))
@@ -75,7 +75,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkDeleteUser() {
-        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkDeleteUser(object))

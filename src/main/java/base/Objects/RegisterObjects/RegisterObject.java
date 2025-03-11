@@ -6,17 +6,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterObject {
+public class RegisterObject<T> {
 
-    int id;
-    String email;
-    String password;
+    T id;
     String name;
     int year;
     String color;
     String pantone_value;
-
-    public RegisterObject(String password) {
-        this.password = password;
-    }
 }

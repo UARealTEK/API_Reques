@@ -4,7 +4,8 @@ public enum Endpoints {
 
     USERS("api/users"),
     RESOURSES("api/unknown"),
-    REGISTER("api/register");
+    REGISTER("api/register"),
+    LOGIN("api/login");
 
     private final String endpoint;
 
