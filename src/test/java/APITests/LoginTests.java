@@ -2,7 +2,6 @@ package APITests;
 
 import base.Common.GenericChecks;
 import base.Constants;
-import base.Objects.LoginObjects.LoginObject;
 import base.Objects.RegisterObjects.RegisterObject;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -29,7 +28,7 @@ public class LoginTests {
 
     @TestFactory
     Stream<DynamicTest> getSingleLoggedInUser() {
-        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
+        List<RegisterObject<Integer>> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()
                 .map(object ->
                         DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkGetSingleUser(object)));
@@ -37,18 +36,18 @@ public class LoginTests {
 
     @TestFactory
     Stream<DynamicTest> postLoginUser() {
-        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
+        List<RegisterObject<Integer>> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()
                 .map(object ->
                         DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkUserLogin(object)));
     }
 
-    public void checkGetSingleUser(RegisterObject user) {
+    public void checkGetSingleUser(RegisterObject<Integer> user) {
         Response response = getLoggedInUser(user.getId());
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 
-    public void checkUserLogin(RegisterObject user) {
+    public void checkUserLogin(RegisterObject<Integer> user) {
         Response response = logInExistingUser(user.getId());
         log.info(response.then().log().body());
         Assertions.assertTrue(GenericChecks.isRequestValid(response));

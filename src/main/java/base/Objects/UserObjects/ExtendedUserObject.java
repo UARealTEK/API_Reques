@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExtendedUserObject<T> extends BaseUserObject {
+public class ExtendedUserObject<T extends Number & Comparable<T>> extends BaseUserObject {
 
     T id;
     String first_name;

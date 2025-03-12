@@ -7,9 +7,13 @@ import base.Steps.CreateUserSteps;
 import base.Objects.UserObjects.BaseUserObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.FakerData;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -17,11 +21,14 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static base.Steps.CreateUserSteps.getAllUsers;
 import static base.Steps.CreateUserSteps.getLastCreatedUser;
 import static base.Utils.ParserHelper.getJsonAsObjectUsingGson;
 
 @Execution(ExecutionMode.CONCURRENT)
 public class UserTests {
+
+    private static final Log log = LogFactory.getLog(UserTests.class);
 
     @BeforeEach
     void setUp() {
@@ -66,12 +73,13 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkPutUser() {
-        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.<Integer>getAllUsers();
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkPutUser(object))
         );
     }
+
 
     @TestFactory
     Stream<DynamicTest> checkDeleteUser() {
@@ -90,7 +98,8 @@ public class UserTests {
 
     @Test
     public void checkGetInvalidUser() {
-        Response response = CreateUserSteps.getUser(Integer.parseInt(getLastCreatedUser().getId()) + 1);
+        ExtendedUserObject<Integer> object = getLastCreatedUser();
+        Response response = CreateUserSteps.getUser(object.getId() + 1);
         Assertions.assertTrue(GenericChecks.isElementNotFound(response));
     }
 
@@ -106,18 +115,19 @@ public class UserTests {
         Assertions.assertTrue(UserChecks.isCreatedAtEqual(response));
     }
 
-    public void checkPutUser(ExtendedUserObject user) {
+    public <T extends Number & Comparable<T>> void checkPutUser(ExtendedUserObject<T> user) {
         Response response = CreateUserSteps.putUser(user);
-        ExtendedUserObject expectedUser = response.as(ExtendedUserObject.class);
+
+        String body = response.jsonPath().getString(Constants.BODY_KEY_DATA);
+        ExtendedUserObject<Integer> expectedUser = new Gson().fromJson(body,new TypeToken<ExtendedUserObject<Integer>>(){}.getType());
 
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
         Assertions.assertNotEquals(expectedUser.getJob(), user.getJob());
-
         Assertions.assertNotEquals(expectedUser.getName(), user.getName());
         Assertions.assertTrue(UserChecks.isUpdatedAtEqual(response));
     }
 
-    public void checkDeleteUser(ExtendedUserObject user) {
+    public void checkDeleteUser(ExtendedUserObject<Integer> user) {
         Response response = CreateUserSteps.deleteUser(user);
         Assertions.assertTrue(GenericChecks.isElementDeleted(response));
     }

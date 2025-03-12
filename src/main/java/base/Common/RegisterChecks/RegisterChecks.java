@@ -11,9 +11,7 @@ public class RegisterChecks {
 
     private static final Log log = LogFactory.getLog(RegisterChecks.class);
 
-    public static boolean isIDMatchedWithResponseID(Response responseBody, ExtendedUserObject passedInBody) {
-        log.info(responseBody.then().extract().body().jsonPath().getInt("id"));
-        log.info(Integer.parseInt(passedInBody.getId()));
-        return responseBody.then().extract().body().jsonPath().getInt("id") == Integer.parseInt(passedInBody.getId());
+    public static <T extends Number & Comparable<T>> boolean isIDMatchedWithResponseID(Response responseBody, ExtendedUserObject<Integer> passedInBody) {
+        return responseBody.then().extract().body().jsonPath().getInt("id") == passedInBody.getId();
     }
 }

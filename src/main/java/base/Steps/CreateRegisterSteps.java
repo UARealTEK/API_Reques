@@ -59,7 +59,7 @@ public class CreateRegisterSteps {
                 .get(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
-    public static Response postRegister(ExtendedUserObject body) {
+    public static <T extends Number & Comparable<T>> Response postRegister(ExtendedUserObject<T> body) {
         JSONObject object = new JSONObject();
         object.put("email",body.getEmail());
         object.put("password",new Faker().internet().password());
@@ -70,7 +70,7 @@ public class CreateRegisterSteps {
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
-    public static void postRegister(ExtendedUserObject body, String password) {
+    public static <T extends Number & Comparable<T>> void postRegister(ExtendedUserObject<T> body, String password) {
         JSONObject object = new JSONObject();
         object.put("email",body.getEmail());
         object.put("password",password);
@@ -80,23 +80,17 @@ public class CreateRegisterSteps {
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
-    public static LoginObject getRegisteredUserData(int userId) {
+    public static LoginObject getRegisteredUserData(Integer userId) {
         String password = new Faker().internet().password();
-        CreateRegisterSteps.postRegister(CreateUserSteps.getUserObject(userId), password);
+        ExtendedUserObject<Integer> object = CreateUserSteps.getUserObject(userId);
+        CreateRegisterSteps.postRegister(object, password);
         return new LoginObject(CreateUserSteps.getUserObject(userId).getEmail(), password);
     }
 
-    public static ExtendedUserObject<String> getRandomRegisteredUser() {
+    public static ExtendedUserObject<Integer> getRandomRegisteredUser() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        List<ExtendedUserObject<String>> userList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject<Integer>> userList = CreateUserSteps.getAllUsers();
 
         return userList.get(random.nextInt(userList.size()));
-    }
-
-    public static RegisterObject<Integer> getLastRegisteredUser() {
-        return getAllRegisteredUsers()
-                .stream()
-                .max(Comparator.comparingInt(RegisterObject::getId))
-                .orElse(null);
     }
 }
