@@ -17,8 +17,8 @@ import static io.restassured.RestAssured.given;
 
 public class CreateLoginSteps {
 
-    public static List<RegisterObject<Integer>> getAllLoggedInUsers() {
-        List<RegisterObject<Integer>> allLoggedInUsers = new ArrayList<>();
+    public static List<RegisterObject> getAllLoggedInUsers() {
+        List<RegisterObject> allLoggedInUsers = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -26,9 +26,8 @@ public class CreateLoginSteps {
             Response response = given()
                     .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.LOGIN));
-            Gson gson = new Gson();
-            String body = response.jsonPath().get(Constants.BODY_KEY_DATA);
-            List<RegisterObject<Integer>> objects = gson.fromJson(body,new TypeToken<List<ExtendedUserObject<Integer>>>(){}.getType());
+
+            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
 
             allLoggedInUsers.addAll(objects);
             currentPage++;

@@ -6,9 +6,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterObject<T> {
+public class RegisterObject {
 
-    T id;
+    String id;
     String name;
     int year;
     String color;

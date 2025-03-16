@@ -1,6 +1,7 @@
 package base.Common.UserChecks;
 
 import base.Constants;
+import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Threshold;
 import io.restassured.response.Response;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ public class UserChecks {
     }
 
     public static boolean isUpdatedAtEqual(Response response) {
-        JSONObject receivedObjectBody = new JSONObject(response.then().extract().body().asString());
+        JSONObject receivedObjectBody = new JSONObject(response.getBody().as(ExtendedUserObject.class));
 
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC)
                 .truncatedTo(ChronoUnit.SECONDS);

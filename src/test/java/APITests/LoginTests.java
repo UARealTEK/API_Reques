@@ -28,7 +28,7 @@ public class LoginTests {
 
     @TestFactory
     Stream<DynamicTest> getSingleLoggedInUser() {
-        List<RegisterObject<Integer>> registeredUsersList = getAllLoggedInUsers();
+        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()
                 .map(object ->
                         DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkGetSingleUser(object)));
@@ -36,20 +36,19 @@ public class LoginTests {
 
     @TestFactory
     Stream<DynamicTest> postLoginUser() {
-        List<RegisterObject<Integer>> registeredUsersList = getAllLoggedInUsers();
+        List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()
                 .map(object ->
                         DynamicTest.dynamicTest(String.format("Checking user: %s", object.getName()), () -> checkUserLogin(object)));
     }
 
-    public void checkGetSingleUser(RegisterObject<Integer> user) {
-        Response response = getLoggedInUser(user.getId());
+    public void checkGetSingleUser(RegisterObject user) {
+        Response response = getLoggedInUser(Integer.parseInt(user.getId()));
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 
-    public void checkUserLogin(RegisterObject<Integer> user) {
-        Response response = logInExistingUser(user.getId());
-        log.info(response.then().log().body());
+    public void checkUserLogin(RegisterObject user) {
+        Response response = logInExistingUser(Integer.parseInt(user.getId()));
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 }

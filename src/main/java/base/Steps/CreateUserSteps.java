@@ -23,8 +23,8 @@ public class CreateUserSteps {
                 .post(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
-    public static <T extends Number & Comparable<T>> List<ExtendedUserObject<T>> getAllUsers() {
-        List<ExtendedUserObject<T>> allUsers = new ArrayList<>();
+    public static List<ExtendedUserObject> getAllUsers() {
+        List<ExtendedUserObject> allUsers = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -33,9 +33,7 @@ public class CreateUserSteps {
                     .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.USERS));
 
-            String responseBody = response.jsonPath().getString(Constants.BODY_KEY_DATA);
-            Gson gson = new Gson();
-            List<ExtendedUserObject<T>> users = gson.fromJson(responseBody, new TypeToken<List<ExtendedUserObject<T>>>() {}.getType());
+            List<ExtendedUserObject> users = response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
 
             allUsers.addAll(users);
             totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
@@ -51,12 +49,10 @@ public class CreateUserSteps {
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
-    public static <T extends Number & Comparable<T>> ExtendedUserObject<T> getLastCreatedUser() {
-        List<ExtendedUserObject<T>> allUsers = getAllUsers();
+    public static ExtendedUserObject getLastCreatedUser() {
+        List<ExtendedUserObject> allUsers = getAllUsers();
         return allUsers.stream()
-                .filter(user -> user.getId() != null)
-                .max(Comparator.comparingInt(user -> ((Number) user.getId()).intValue()))
-                .orElse(null);
+                .max(Comparator.comparingInt(user -> Integer.parseInt(user.getId()))).orElse(new ExtendedUserObject());
     }
 
     public static Response getUser(int id) {
@@ -65,14 +61,14 @@ public class CreateUserSteps {
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 
-    public static <T extends Number & Comparable<T>> ExtendedUserObject<T> getUserObject(Integer userID) {
-        List<ExtendedUserObject<T>> allUsers = getAllUsers();
+    public static ExtendedUserObject getUserObject(Integer userID) {
+        List<ExtendedUserObject> allUsers = getAllUsers();
         return allUsers.stream()
-                .filter(user -> Objects.equals((Number) user.getId(), userID))
+                .filter(user -> Integer.parseInt(user.getId()) == userID)
                 .findFirst().orElse(null);
     }
 
-    public static <T extends Number & Comparable<T>> Response putUser(ExtendedUserObject<T> user) {
+    public static Response putUser(ExtendedUserObject user) {
         BaseUserObject objectBody = FakerData.createFakerUser();
         return
                 given()
@@ -82,7 +78,7 @@ public class CreateUserSteps {
                         .put(Endpoints.getEndpoint(Endpoints.USERS) + "/" + user.getId());
     }
 
-    public static <T extends Number & Comparable<T>> Response deleteUser(ExtendedUserObject<T> user) {
+    public static Response deleteUser(ExtendedUserObject user) {
        return given()
                 .delete(Endpoints.getEndpoint(Endpoints.USERS) + "/" + user.getId());
     }

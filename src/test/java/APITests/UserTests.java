@@ -21,7 +21,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static base.Steps.CreateUserSteps.getAllUsers;
 import static base.Steps.CreateUserSteps.getLastCreatedUser;
 import static base.Utils.ParserHelper.getJsonAsObjectUsingGson;
 
@@ -46,10 +45,10 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkGetUserRequest() {
-        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 instance -> DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getFirst_name(), instance.getLast_name()), () ->
-                        checkSpecificUser(instance.getId()))
+                        checkSpecificUser(Integer.parseInt(instance.getId())))
         );
     }
 
@@ -73,7 +72,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkPutUser() {
-        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.<Integer>getAllUsers();
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkPutUser(object))
@@ -83,7 +82,7 @@ public class UserTests {
 
     @TestFactory
     Stream<DynamicTest> checkDeleteUser() {
-        List<ExtendedUserObject<Integer>> userDataList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
                 object -> DynamicTest.dynamicTest(String.format("Checking case for: %s", object.getFirst_name()), () ->
                         checkDeleteUser(object))
@@ -98,8 +97,8 @@ public class UserTests {
 
     @Test
     public void checkGetInvalidUser() {
-        ExtendedUserObject<Integer> object = getLastCreatedUser();
-        Response response = CreateUserSteps.getUser(object.getId() + 1);
+        ExtendedUserObject object = getLastCreatedUser();
+        Response response = CreateUserSteps.getUser(Integer.parseInt(object.getId() + 1));
         Assertions.assertTrue(GenericChecks.isElementNotFound(response));
     }
 
@@ -115,11 +114,10 @@ public class UserTests {
         Assertions.assertTrue(UserChecks.isCreatedAtEqual(response));
     }
 
-    public <T extends Number & Comparable<T>> void checkPutUser(ExtendedUserObject<T> user) {
+    public void checkPutUser(ExtendedUserObject user) {
         Response response = CreateUserSteps.putUser(user);
-
-        String body = response.jsonPath().getString(Constants.BODY_KEY_DATA);
-        ExtendedUserObject<Integer> expectedUser = new Gson().fromJson(body,new TypeToken<ExtendedUserObject<Integer>>(){}.getType());
+        log.fatal(response.then().log().body());
+        ExtendedUserObject expectedUser = response.getBody().as(ExtendedUserObject.class);
 
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
         Assertions.assertNotEquals(expectedUser.getJob(), user.getJob());
@@ -127,7 +125,7 @@ public class UserTests {
         Assertions.assertTrue(UserChecks.isUpdatedAtEqual(response));
     }
 
-    public void checkDeleteUser(ExtendedUserObject<Integer> user) {
+    public void checkDeleteUser(ExtendedUserObject user) {
         Response response = CreateUserSteps.deleteUser(user);
         Assertions.assertTrue(GenericChecks.isElementDeleted(response));
     }

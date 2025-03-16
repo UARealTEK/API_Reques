@@ -9,19 +9,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExtendedUserObject<T extends Number & Comparable<T>> extends BaseUserObject {
+public class ExtendedUserObject extends BaseUserObject {
 
-    T id;
+    String id;
     String first_name;
     String last_name;
     String email;
     String avatar;
+    String updatedAt;
 
     public ExtendedUserObject(String email) {
         this.email = email;
-    }
-
-    public ExtendedUserObject(T id) {
-        this.id = id;
     }
 }

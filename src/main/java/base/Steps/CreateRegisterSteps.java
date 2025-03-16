@@ -23,10 +23,8 @@ import static io.restassured.RestAssured.given;
 
 public class CreateRegisterSteps {
 
-    private static final Log log = LogFactory.getLog(CreateRegisterSteps.class);
-
-    public static <T> List<RegisterObject<T>> getAllRegisteredUsers(Class<T> type) {
-        List<RegisterObject<T>> allRegisteredUsers = new ArrayList<>();
+    public static List<RegisterObject> getAllRegisteredUsers() {
+        List<RegisterObject> allRegisteredUsers = new ArrayList<>();
         int currentPage = 1;
         int totalPages;
 
@@ -35,9 +33,7 @@ public class CreateRegisterSteps {
                     .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.REGISTER));
 
-            String responseBody = response.jsonPath().getString(Constants.BODY_KEY_DATA);
-            Gson gson = new Gson();
-            List<RegisterObject<T>> objects = gson.fromJson(responseBody, new TypeToken<List<RegisterObject<T>>>(){}.getType());
+            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
 
             allRegisteredUsers.addAll(objects);
             currentPage++;
@@ -59,7 +55,7 @@ public class CreateRegisterSteps {
                 .get(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
-    public static <T extends Number & Comparable<T>> Response postRegister(ExtendedUserObject<T> body) {
+    public static Response postRegister(ExtendedUserObject body) {
         JSONObject object = new JSONObject();
         object.put("email",body.getEmail());
         object.put("password",new Faker().internet().password());
@@ -70,7 +66,7 @@ public class CreateRegisterSteps {
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
-    public static <T extends Number & Comparable<T>> void postRegister(ExtendedUserObject<T> body, String password) {
+    public static void postRegister(ExtendedUserObject body, String password) {
         JSONObject object = new JSONObject();
         object.put("email",body.getEmail());
         object.put("password",password);
@@ -82,14 +78,14 @@ public class CreateRegisterSteps {
 
     public static LoginObject getRegisteredUserData(Integer userId) {
         String password = new Faker().internet().password();
-        ExtendedUserObject<Integer> object = CreateUserSteps.getUserObject(userId);
+        ExtendedUserObject object = CreateUserSteps.getUserObject(userId);
         CreateRegisterSteps.postRegister(object, password);
         return new LoginObject(CreateUserSteps.getUserObject(userId).getEmail(), password);
     }
 
-    public static ExtendedUserObject<Integer> getRandomRegisteredUser() {
+    public static ExtendedUserObject getRandomRegisteredUser() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        List<ExtendedUserObject<Integer>> userList = CreateUserSteps.getAllUsers();
+        List<ExtendedUserObject> userList = CreateUserSteps.getAllUsers();
 
         return userList.get(random.nextInt(userList.size()));
     }
