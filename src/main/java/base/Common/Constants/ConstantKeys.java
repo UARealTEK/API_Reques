@@ -1,6 +1,6 @@
-package base;
+package base.Common.Constants;
 
-public class Constants {
+public class ConstantKeys {
     public static final String BASE_URL = "https://reqres.in/";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
     public static final String VALID_JSON_FILE_PATH = "user.json";
@@ -16,4 +16,5 @@ public class Constants {
 
 
     public static final String RESPONSE_KEY_TOTAL_PAGES = "total_pages";
+    public static final String RESPONSE_KEY_ERROR = "error";
 }

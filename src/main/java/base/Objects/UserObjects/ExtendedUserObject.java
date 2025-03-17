@@ -12,15 +12,13 @@ import lombok.Setter;
 public class ExtendedUserObject extends BaseUserObject {
 
     String id;
-    String createdAt;
-    String updatedAt;
     String first_name;
     String last_name;
     String email;
     String avatar;
+    String updatedAt;
 
     public ExtendedUserObject(String email) {
         this.email = email;
     }
-
 }

@@ -1,6 +1,6 @@
 package base.Utils;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
 
@@ -13,11 +13,8 @@ public class ParserHelper {
 
     @SneakyThrows
     public static <T> List<T> getJsonAsObjectUsingGson(String jsonFilePath, Class<T[]> cl) {
-        String jsonString = new String(Files.readAllBytes(Paths.get(Constants.RESOURCES_PATH + jsonFilePath)));
+        String jsonString = new String(Files.readAllBytes(Paths.get(ConstantKeys.RESOURCES_PATH + jsonFilePath)));
         return Arrays.asList(new Gson().fromJson(jsonString, cl));
     }
-
-
-
 
 }

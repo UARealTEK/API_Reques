@@ -1,6 +1,6 @@
 package base.Steps;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.ResourceObjects.Resources;
 import base.Utils.Endpoints;
 import io.restassured.response.Response;
@@ -20,13 +20,13 @@ public class CreateResourcesSteps {
 
         do {
             Response response = given()
-                    .queryParam(Constants.QUERY_PARAM_PAGE,currentPage)
+                    .queryParam(ConstantKeys.QUERY_PARAM_PAGE,currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.RESOURSES));
 
-            List<Resources> resources = response.jsonPath().getList(Constants.BODY_KEY_DATA, Resources.class);
+            List<Resources> resources = response.jsonPath().getList(ConstantKeys.BODY_KEY_DATA, Resources.class);
             allResources.addAll(resources);
             currentPage++;
-            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
+            totalPages = response.jsonPath().getInt(ConstantKeys.RESPONSE_KEY_TOTAL_PAGES);
         } while (currentPage <= totalPages);
 
         return allResources;
@@ -39,7 +39,7 @@ public class CreateResourcesSteps {
 
     public static Response getResource(int ResourceId) {
         return given()
-                .queryParam(Constants.QUERY_PARAM_ID, ResourceId)
+                .queryParam(ConstantKeys.QUERY_PARAM_ID, ResourceId)
                 .get(Endpoints.getEndpoint(Endpoints.RESOURSES));
     }
 

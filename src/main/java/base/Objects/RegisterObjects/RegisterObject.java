@@ -8,15 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 public class RegisterObject {
 
-    int id;
-    String email;
-    String password;
+    String id;
     String name;
     int year;
     String color;
     String pantone_value;
-
-    public RegisterObject(String password) {
-        this.password = password;
-    }
 }

@@ -1,15 +1,16 @@
 package base.Steps;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
+import base.Objects.LoginObjects.LoginObject;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
 import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,17 +25,19 @@ public class CreateRegisterSteps {
 
         do {
             Response response = given()
-                    .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
+                    .queryParam(ConstantKeys.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.REGISTER));
-            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
+
+            List<RegisterObject> objects = response.jsonPath().getList(ConstantKeys.BODY_KEY_DATA, RegisterObject.class);
 
             allRegisteredUsers.addAll(objects);
             currentPage++;
-            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
+            totalPages = response.jsonPath().getInt(ConstantKeys.RESPONSE_KEY_TOTAL_PAGES);
         } while (currentPage <= totalPages);
 
         return allRegisteredUsers;
     }
+
 
     public static Response getAllRegisteredUsersRequest() {
         return given()
@@ -43,18 +46,36 @@ public class CreateRegisterSteps {
 
     public static Response getRegisteredUser(int userID) {
         return given()
-                .queryParam(Constants.QUERY_PARAM_ID, userID)
+                .queryParam(ConstantKeys.QUERY_PARAM_ID, userID)
                 .get(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 
     public static Response postRegister(ExtendedUserObject body) {
-        RegisterObject object = new RegisterObject();
-        object.setEmail(body.getEmail());
-        object.setPassword(new Faker().internet().password());
+        JSONObject object = new JSONObject();
+        object.put("email",body.getEmail());
+        object.put("password",new Faker().internet().password());
+
         return given()
+                .contentType(ContentType.JSON)
+                .body(object.toString())
+                .post(Endpoints.getEndpoint(Endpoints.REGISTER));
+    }
+
+    public static void postRegister(ExtendedUserObject body, String password) {
+        JSONObject object = new JSONObject();
+        object.put("email",body.getEmail());
+        object.put("password",password);
+        given()
                 .contentType(ContentType.JSON)
                 .body(object)
                 .post(Endpoints.getEndpoint(Endpoints.REGISTER));
+    }
+
+    public static LoginObject getRegisteredUserData(Integer userId) {
+        String password = new Faker().internet().password();
+        ExtendedUserObject object = CreateUserSteps.getUserObject(userId);
+        CreateRegisterSteps.postRegister(object, password);
+        return new LoginObject(CreateUserSteps.getUserObject(userId).getEmail(), password);
     }
 
     public static ExtendedUserObject getRandomRegisteredUser() {
@@ -62,12 +83,5 @@ public class CreateRegisterSteps {
         List<ExtendedUserObject> userList = CreateUserSteps.getAllUsers();
 
         return userList.get(random.nextInt(userList.size()));
-    }
-
-    public static RegisterObject getLastRegisteredUser() {
-        return getAllRegisteredUsers()
-                .stream()
-                .max(Comparator.comparingInt(RegisterObject::getId))
-                .orElse(null);
     }
 }
