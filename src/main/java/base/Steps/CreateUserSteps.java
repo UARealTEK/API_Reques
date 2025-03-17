@@ -1,12 +1,10 @@
 package base.Steps;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.UserObjects.BaseUserObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
 import base.Utils.FakerData;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -30,13 +28,13 @@ public class CreateUserSteps {
 
         do {
             Response response = given()
-                    .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
+                    .queryParam(ConstantKeys.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.USERS));
 
-            List<ExtendedUserObject> users = response.jsonPath().getList(Constants.BODY_KEY_DATA, ExtendedUserObject.class);
+            List<ExtendedUserObject> users = response.jsonPath().getList(ConstantKeys.BODY_KEY_DATA, ExtendedUserObject.class);
 
             allUsers.addAll(users);
-            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
+            totalPages = response.jsonPath().getInt(ConstantKeys.RESPONSE_KEY_TOTAL_PAGES);
             currentPage++;
 
         } while (currentPage <= totalPages);
@@ -57,7 +55,7 @@ public class CreateUserSteps {
 
     public static Response getUser(int id) {
         return given()
-                .queryParam(Constants.QUERY_PARAM_ID, id)
+                .queryParam(ConstantKeys.QUERY_PARAM_ID, id)
                 .get(Endpoints.getEndpoint(Endpoints.USERS));
     }
 

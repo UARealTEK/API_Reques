@@ -2,7 +2,7 @@ package APITests;
 
 import base.Common.GenericChecks;
 import base.Common.RegisterChecks.RegisterChecks;
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Steps.CreateUserSteps;
@@ -28,7 +28,7 @@ public class RegisterTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = Constants.BASE_URL;
+        RestAssured.baseURI = ConstantKeys.BASE_URL;
     }
 
     @TestFactory

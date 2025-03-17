@@ -2,13 +2,11 @@ package APITests;
 
 import base.Common.GenericChecks;
 import base.Common.UserChecks.UserChecks;
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Steps.CreateUserSteps;
 import base.Objects.UserObjects.BaseUserObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.FakerData;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.qameta.allure.*;
 import io.restassured.RestAssured;
 
@@ -32,7 +30,7 @@ public class UserTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = Constants.BASE_URL;
+        RestAssured.baseURI = ConstantKeys.BASE_URL;
     }
 
     @TestFactory
@@ -41,7 +39,7 @@ public class UserTests {
     @Story("Users Feature")
     @Feature("Users")
     Stream<DynamicTest> checkPostUserRequest() {
-        List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(Constants.VALID_JSON_FILE_PATH, BaseUserObject[].class);
+        List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(ConstantKeys.VALID_JSON_FILE_PATH, BaseUserObject[].class);
         return  userDataList.stream().map(
                 instance ->
                 DynamicTest.dynamicTest(String.format("Verification of: %s %s user", instance.getName(), instance.getJob()), () ->
@@ -80,7 +78,7 @@ public class UserTests {
     @Story("Users Feature")
     @Feature("Users")
     Stream<DynamicTest> checkPostInvalidRequest() {
-        List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(Constants.INVALID_JSON_FILE_PATH, BaseUserObject[].class);
+        List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(ConstantKeys.INVALID_JSON_FILE_PATH, BaseUserObject[].class);
         return  userDataList.stream().map(
                 instance ->
                         DynamicTest.dynamicTest(String.format("Verification of Invalid user: %s %s user", instance.getName(), instance.getJob()), () ->

@@ -1,21 +1,16 @@
 package base.Steps;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.LoginObjects.LoginObject;
 import base.Objects.RegisterObjects.RegisterObject;
 import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
 import com.github.javafaker.Faker;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,14 +25,14 @@ public class CreateRegisterSteps {
 
         do {
             Response response = given()
-                    .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
+                    .queryParam(ConstantKeys.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.REGISTER));
 
-            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
+            List<RegisterObject> objects = response.jsonPath().getList(ConstantKeys.BODY_KEY_DATA, RegisterObject.class);
 
             allRegisteredUsers.addAll(objects);
             currentPage++;
-            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
+            totalPages = response.jsonPath().getInt(ConstantKeys.RESPONSE_KEY_TOTAL_PAGES);
         } while (currentPage <= totalPages);
 
         return allRegisteredUsers;
@@ -51,7 +46,7 @@ public class CreateRegisterSteps {
 
     public static Response getRegisteredUser(int userID) {
         return given()
-                .queryParam(Constants.QUERY_PARAM_ID, userID)
+                .queryParam(ConstantKeys.QUERY_PARAM_ID, userID)
                 .get(Endpoints.getEndpoint(Endpoints.REGISTER));
     }
 

@@ -1,11 +1,8 @@
 package base.Steps;
 
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.RegisterObjects.RegisterObject;
-import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.Endpoints;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -24,14 +21,14 @@ public class CreateLoginSteps {
 
         do {
             Response response = given()
-                    .queryParam(Constants.QUERY_PARAM_PAGE, currentPage)
+                    .queryParam(ConstantKeys.QUERY_PARAM_PAGE, currentPage)
                     .get(Endpoints.getEndpoint(Endpoints.LOGIN));
 
-            List<RegisterObject> objects = response.jsonPath().getList(Constants.BODY_KEY_DATA, RegisterObject.class);
+            List<RegisterObject> objects = response.jsonPath().getList(ConstantKeys.BODY_KEY_DATA, RegisterObject.class);
 
             allLoggedInUsers.addAll(objects);
             currentPage++;
-            totalPages = response.jsonPath().getInt(Constants.RESPONSE_KEY_TOTAL_PAGES);
+            totalPages = response.jsonPath().getInt(ConstantKeys.RESPONSE_KEY_TOTAL_PAGES);
         } while (currentPage <= totalPages);
 
         return allLoggedInUsers;
@@ -39,7 +36,7 @@ public class CreateLoginSteps {
 
     public static Response getLoggedInUser(int userID) {
         return given()
-                .queryParam(Constants.QUERY_PARAM_ID, userID)
+                .queryParam(ConstantKeys.QUERY_PARAM_ID, userID)
                 .contentType(ContentType.JSON)
                 .get(Endpoints.getEndpoint(Endpoints.LOGIN));
 

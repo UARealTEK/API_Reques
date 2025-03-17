@@ -1,7 +1,7 @@
 package APITests;
 
 import base.Common.GenericChecks;
-import base.Constants;
+import base.Common.Constants.ConstantKeys;
 import base.Objects.ResourceObjects.Resources;
 import base.Steps.CreateResourcesSteps;
 import io.qameta.allure.*;
@@ -19,7 +19,7 @@ public class ResourcesTests {
 
     @BeforeEach
     void setUp() {
-        RestAssured.baseURI = Constants.BASE_URL;
+        RestAssured.baseURI = ConstantKeys.BASE_URL;
     }
 
     @TestFactory
