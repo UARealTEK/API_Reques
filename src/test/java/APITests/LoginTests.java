@@ -3,30 +3,35 @@ package APITests;
 import base.Common.GenericChecks;
 import base.Constants;
 import base.Objects.RegisterObjects.RegisterObject;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static base.Steps.CreateLoginSteps.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 public class LoginTests {
-
-    private static final Log log = LogFactory.getLog(LoginTests.class);
 
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = Constants.BASE_URL;
     }
 
+
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies receiving user which was already logged in")
+    @Story("Login Feature")
+    @Feature("User Authentication")
     Stream<DynamicTest> getSingleLoggedInUser() {
         List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()
@@ -35,6 +40,10 @@ public class LoginTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.NORMAL)
+    @Description("This test verifies single user login functionality")
+    @Story("Login Feature")
+    @Feature("User Authentication")
     Stream<DynamicTest> postLoginUser() {
         List<RegisterObject> registeredUsersList = getAllLoggedInUsers();
         return registeredUsersList.stream()

@@ -9,6 +9,7 @@ import base.Objects.UserObjects.ExtendedUserObject;
 import base.Utils.FakerData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 
 import io.restassured.response.Response;
@@ -35,6 +36,10 @@ public class UserTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies posting a user")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkPostUserRequest() {
         List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(Constants.VALID_JSON_FILE_PATH, BaseUserObject[].class);
         return  userDataList.stream().map(
@@ -44,6 +49,10 @@ public class UserTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies getting all users")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkGetUserRequest() {
         List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
@@ -53,6 +62,10 @@ public class UserTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies posting a random User")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkPostRandomUser() {
         List<BaseUserObject> userDataList = FakerData.createFakerUserList(10);
         return userDataList.stream().map(
@@ -62,6 +75,10 @@ public class UserTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies posting an invalid User")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkPostInvalidRequest() {
         List<BaseUserObject> userDataList = getJsonAsObjectUsingGson(Constants.INVALID_JSON_FILE_PATH, BaseUserObject[].class);
         return  userDataList.stream().map(
@@ -71,6 +88,10 @@ public class UserTests {
     }
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies updating data for a specific user")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkPutUser() {
         List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
@@ -81,6 +102,10 @@ public class UserTests {
 
 
     @TestFactory
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies deleting User")
+    @Story("Users Feature")
+    @Feature("Users")
     Stream<DynamicTest> checkDeleteUser() {
         List<ExtendedUserObject> userDataList = CreateUserSteps.getAllUsers();
         return userDataList.stream().map(
@@ -90,12 +115,20 @@ public class UserTests {
     }
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies getting all users")
+    @Story("Users Feature")
+    @Feature("Users")
     public void checkGetAllUsers() {
         Response response = CreateUserSteps.getAllUsersRequest();
         Assertions.assertTrue(GenericChecks.isRequestValid(response));
     }
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("This test verifies getting invalid user")
+    @Story("Users Feature")
+    @Feature("Users")
     public void checkGetInvalidUser() {
         ExtendedUserObject object = getLastCreatedUser();
         Response response = CreateUserSteps.getUser(Integer.parseInt(object.getId() + 1));
